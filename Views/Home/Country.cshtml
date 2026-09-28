@@ -1,0 +1,278 @@
+@model TasteSphere.Models.Cuisine
+
+@{
+    ViewData["Title"] = Model.CountryName + " Recipes";
+}
+
+<style>
+    body {
+        background: #faf8f4;
+    }
+
+    .country-page {
+        max-width: 1150px;
+        margin: 40px auto 60px;
+    }
+
+    .country-hero {
+        background: linear-gradient(135deg, #fff1e8, #fce0d2);
+        padding: 50px 30px;
+        border-radius: 28px;
+        text-align: center;
+        margin-bottom: 40px;
+    }
+
+    .country-icon {
+        font-size: 65px;
+        margin-bottom: 10px;
+    }
+
+    .country-hero h1 {
+        font-size: 42px;
+        font-weight: 800;
+        margin-bottom: 8px;
+    }
+
+    .country-hero p {
+        color: #777;
+        font-size: 17px;
+        margin: 0;
+    }
+
+    .recipe-card {
+        background: white;
+        border-radius: 22px;
+        overflow: hidden;
+        height: 100%;
+        border: 1px solid #eee;
+        box-shadow: 0 6px 22px rgba(0,0,0,0.06);
+        transition: 0.25s;
+    }
+
+    .recipe-card:hover {
+        transform: translateY(-7px);
+        box-shadow: 0 15px 35px rgba(0,0,0,0.11);
+    }
+
+    .recipe-image {
+        width: 100%;
+        height: 210px;
+        object-fit: cover;
+    }
+
+    .recipe-placeholder {
+        height: 210px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 70px;
+        background: #fff1e8;
+    }
+
+    .recipe-content {
+        padding: 22px;
+    }
+
+    .recipe-content h3 {
+        font-size: 21px;
+        font-weight: 800;
+        margin-bottom: 10px;
+    }
+
+    .description {
+        color: #777;
+        font-size: 14px;
+        line-height: 1.6;
+    }
+
+    .info {
+        margin-top: 15px;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+
+    .info span {
+        background: #f8f6f3;
+        padding: 7px 10px;
+        border-radius: 20px;
+        font-size: 12px;
+        font-weight: 600;
+        color: #555;
+    }
+
+    .bottom {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: 18px;
+    }
+
+    .category {
+        background: #fff0eb;
+        color: #e76f51;
+        padding: 7px 12px;
+        border-radius: 20px;
+        font-size: 12px;
+        font-weight: 700;
+    }
+
+    .view-btn {
+        background: #252525;
+        color: white;
+        text-decoration: none;
+        padding: 9px 15px;
+        border-radius: 20px;
+        font-size: 13px;
+        font-weight: 700;
+    }
+
+    .view-btn:hover {
+        background: #e76f51;
+        color: white;
+    }
+
+    .back-btn {
+        display: inline-block;
+        color: #555;
+        text-decoration: none;
+        font-weight: 600;
+        margin-bottom: 20px;
+    }
+
+    .back-btn:hover {
+        color: #e76f51;
+    }
+
+    .no-recipes {
+        background: white;
+        padding: 50px;
+        border-radius: 20px;
+        text-align: center;
+    }
+</style>
+
+
+<div class="country-page">
+
+    <a href="@Url.Action("Index", "Home")"
+       class="back-btn">
+        ← Back to TasteSphere
+    </a>
+
+
+    <!-- COUNTRY HEADER -->
+
+    <div class="country-hero">
+
+        <div class="country-icon">
+            🌍
+        </div>
+
+        <h1>
+            @Model.CountryName Recipes
+        </h1>
+
+        <p>
+            Discover delicious @Model.CuisineName dishes from @Model.CountryName.
+        </p>
+
+    </div>
+
+
+    <!-- RECIPES -->
+
+    @{
+        var recipes =
+            (IEnumerable<TasteSphere.Models.Recipe>)ViewBag.Recipes;
+    }
+
+    @if (recipes.Any())
+    {
+        <div class="row">
+
+            @foreach (var recipe in recipes)
+            {
+                <div class="col-md-6 col-lg-4 mb-4">
+
+                    <div class="recipe-card">
+
+                        @if (!string.IsNullOrWhiteSpace(recipe.ImageUrl))
+                        {
+                            <img src="@recipe.ImageUrl"
+                                 alt="@recipe.RecipeName"
+                                 class="recipe-image" />
+                        }
+                        else
+                        {
+                            <div class="recipe-placeholder">
+                                🍽️
+                            </div>
+                        }
+
+
+                        <div class="recipe-content">
+
+                            <h3>
+                                @recipe.RecipeName
+                            </h3>
+
+                            <p class="description">
+                                @recipe.Description
+                            </p>
+
+
+                            <div class="info">
+
+                                <span>
+                                    ⏱️ @((recipe.PrepTime ?? 0) + (recipe.CookTime ?? 0)) mins
+                                </span>
+
+                                <span>
+                                    📊 @recipe.Difficulty
+                                </span>
+
+                                <span>
+                                    👥 @recipe.Servings servings
+                                </span>
+
+                            </div>
+
+
+                            <div class="bottom">
+
+                                <span class="category">
+                                    @recipe.Category?.CategoryName
+                                </span>
+
+                                <a href="@Url.Action("Details", "Home", new { id = recipe.RecipeId })"
+                                   class="view-btn">
+                                    View Recipe →
+                                </a>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+            }
+
+        </div>
+    }
+    else
+    {
+        <div class="no-recipes">
+
+            <h3>No recipes available yet 🍽️</h3>
+
+            <p>
+                More delicious recipes from @Model.CountryName
+                will be added soon.
+            </p>
+
+        </div>
+    }
+
+</div>

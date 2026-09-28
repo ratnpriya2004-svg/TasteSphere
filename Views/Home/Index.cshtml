@@ -1,0 +1,547 @@
+﻿@model IEnumerable<TasteSphere.Models.Recipe>
+
+@{
+    ViewData["Title"] = "TasteSphere";
+}
+
+<style>
+    body {
+        background: #faf8f4;
+        color: #252525;
+    }
+
+    .taste-container {
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+
+    /* HERO */
+    .hero {
+        background: linear-gradient(135deg, #fff3e6, #fce8d8);
+        padding: 70px 35px;
+        border-radius: 30px;
+        margin: 35px 0 55px;
+        text-align: center;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .hero::before {
+        content: "🍝";
+        position: absolute;
+        font-size: 100px;
+        left: 35px;
+        top: 30px;
+        opacity: 0.12;
+    }
+
+    .hero::after {
+        content: "🍜";
+        position: absolute;
+        font-size: 100px;
+        right: 35px;
+        bottom: 15px;
+        opacity: 0.12;
+    }
+
+    .hero h1 {
+        font-size: 58px;
+        font-weight: 800;
+        margin-bottom: 10px;
+        letter-spacing: -1px;
+    }
+
+    .hero h1 span {
+        color: #e76f51;
+    }
+
+    .hero p {
+        font-size: 19px;
+        color: #666;
+        margin-bottom: 32px;
+    }
+
+    /* SEARCH */
+    .search-box {
+        max-width: 680px;
+        margin: auto;
+        display: flex;
+        background: white;
+        border: 1px solid #eee;
+        border-radius: 60px;
+        padding: 7px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+    }
+
+    .search-box input {
+        flex: 1;
+        border: none;
+        outline: none;
+        padding: 15px 20px;
+        border-radius: 50px;
+        font-size: 16px;
+        min-width: 0;
+    }
+
+    .search-box button {
+        border: none;
+        background: #e76f51;
+        color: white;
+        padding: 13px 28px;
+        border-radius: 50px;
+        font-weight: 700;
+        cursor: pointer;
+        transition: 0.2s;
+    }
+
+    .search-box button:hover {
+        transform: scale(1.03);
+    }
+
+    .clear-search {
+        display: inline-block;
+        margin-top: 15px;
+        color: #e76f51;
+        text-decoration: none;
+        font-size: 14px;
+        font-weight: 600;
+    }
+
+    /* SECTION */
+    .section-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 25px;
+    }
+
+    .section-title {
+        font-size: 30px;
+        font-weight: 800;
+        margin: 0;
+    }
+
+    .section-subtitle {
+        color: #777;
+        margin-top: 6px;
+    }
+
+    /* COUNTRY CARDS */
+    .country-card {
+        background: white;
+        border-radius: 20px;
+        padding: 25px 15px;
+        text-align: center;
+        height: 100%;
+        border: 1px solid #eee;
+        box-shadow: 0 5px 18px rgba(0,0,0,0.05);
+        transition: 0.25s;
+    }
+
+    .country-card:hover {
+        transform: translateY(-7px);
+        box-shadow: 0 14px 30px rgba(0,0,0,0.10);
+        border-color: #f1c6b9;
+    }
+
+    .country-icon {
+        font-size: 42px;
+        margin-bottom: 12px;
+    }
+
+    .country-name {
+        color: #222;
+        font-size: 17px;
+        font-weight: 700;
+        margin-bottom: 8px;
+    }
+
+    .cuisine-name {
+        color: #e76f51;
+        background: #fff0eb;
+        padding: 5px 11px;
+        border-radius: 30px;
+        font-size: 12px;
+        font-weight: 700;
+    }
+
+    /* RECIPE CARD */
+    .recipe-card {
+        background: white;
+        border-radius: 22px;
+        overflow: hidden;
+        height: 100%;
+        border: 1px solid #eee;
+        box-shadow: 0 6px 22px rgba(0,0,0,0.06);
+        transition: 0.25s;
+    }
+
+    .recipe-card:hover {
+        transform: translateY(-7px);
+        box-shadow: 0 15px 35px rgba(0,0,0,0.11);
+    }
+
+    .recipe-image {
+        height: 210px;
+        width: 100%;
+        object-fit: cover;
+        display: block;
+        background: #f5eee8;
+    }
+
+    .recipe-image-placeholder {
+        height: 210px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 70px;
+        background: linear-gradient(135deg, #fff1e8, #f8ddd0);
+    }
+
+    .recipe-content {
+        padding: 22px;
+    }
+
+    .recipe-card h3 {
+        font-size: 21px;
+        font-weight: 800;
+        margin-bottom: 10px;
+    }
+
+    .recipe-description {
+        color: #777;
+        font-size: 14px;
+        line-height: 1.6;
+        min-height: 45px;
+    }
+
+    .recipe-info {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin: 16px 0;
+    }
+
+    .info-pill {
+        background: #f8f6f3;
+        color: #555;
+        padding: 7px 10px;
+        border-radius: 20px;
+        font-size: 12px;
+        font-weight: 600;
+    }
+
+    .recipe-bottom {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: 18px;
+    }
+
+    .category-badge {
+        background: #fff0eb;
+        color: #e76f51;
+        padding: 7px 12px;
+        border-radius: 20px;
+        font-size: 12px;
+        font-weight: 700;
+    }
+
+    .view-btn {
+        background: #252525;
+        color: white;
+        text-decoration: none;
+        padding: 9px 15px;
+        border-radius: 20px;
+        font-size: 13px;
+        font-weight: 700;
+        transition: 0.2s;
+    }
+
+    .view-btn:hover {
+        background: #e76f51;
+        color: white;
+    }
+
+    /* NO RESULTS */
+    .no-results {
+        background: white;
+        border-radius: 20px;
+        padding: 50px 20px;
+        text-align: center;
+        border: 1px solid #eee;
+    }
+
+    .no-results-icon {
+        font-size: 55px;
+        margin-bottom: 15px;
+    }
+
+    .no-results h3 {
+        font-weight: 800;
+    }
+
+    .no-results p {
+        color: #777;
+    }
+
+    /* SPACING */
+    .country-section {
+        margin-bottom: 65px;
+    }
+
+    .recipe-section {
+        margin-bottom: 60px;
+    }
+
+    @@media (max-width: 768px) {
+
+        .hero {
+            padding: 50px 20px;
+        }
+
+        .hero h1 {
+            font-size: 42px;
+        }
+
+        .hero::before,
+        .hero::after {
+            display: none;
+        }
+
+        .search-box {
+            width: 100%;
+        }
+
+        .search-box button {
+            padding: 12px 18px;
+        }
+
+        .section-title {
+            font-size: 25px;
+        }
+    }
+</style>
+
+
+<div class="taste-container">
+
+    <!-- HERO SECTION -->
+    <section class="hero">
+
+        <h1>🌍 Taste<span>Sphere</span></h1>
+
+        <p>
+            Explore the World, One Dish at a Time.
+        </p>
+
+        <form asp-controller="Home"
+              asp-action="Index"
+              method="get"
+              class="search-box">
+
+            <input type="text"
+                   name="search"
+                   value="@ViewBag.Search"
+                   placeholder="Search recipes, cuisines or countries..." />
+
+            <button type="submit">
+                🔍 Search
+            </button>
+
+        </form>
+
+        @if (!string.IsNullOrWhiteSpace(ViewBag.Search))
+        {
+            <a href="@Url.Action("Index", "Home")"
+               class="clear-search">
+                ✕ Clear Search
+            </a>
+        }
+
+    </section>
+
+
+    <!-- COUNTRY SECTION -->
+    <section class="country-section">
+
+        <div class="section-header">
+            <div>
+                <h2 class="section-title">
+                    🌎 Explore by Country
+                </h2>
+
+                <p class="section-subtitle">
+                    Discover delicious dishes from around the world.
+                </p>
+            </div>
+        </div>
+
+
+        <div class="row">
+
+            @foreach (var cuisine in (IEnumerable<TasteSphere.Models.Cuisine>)ViewBag.Cuisines)
+            {
+                <div class="col-6 col-md-4 col-lg-2 mb-4">
+
+                    <a href="@Url.Action("Country", "Home", new { id = cuisine.CuisineId })"
+   style="text-decoration: none;">
+
+                        <div class="country-card">
+
+                            <div class="country-icon">
+                                🌍
+                            </div>
+
+                            <div class="country-name">
+                                @cuisine.CountryName
+                            </div>
+
+                            <span class="cuisine-name">
+                                @cuisine.CuisineName
+                            </span>
+
+                        </div>
+
+                    </a>
+
+                </div>
+            }
+
+        </div>
+
+    </section>
+
+
+    <!-- RECIPES SECTION -->
+    <section class="recipe-section">
+
+        <div class="section-header">
+
+            <div>
+                @if (!string.IsNullOrWhiteSpace(ViewBag.Search))
+                {
+                    <h2 class="section-title">
+                        🔎 Search Results
+                    </h2>
+
+                    <p class="section-subtitle">
+                        Recipes matching "@ViewBag.Search"
+                    </p>
+                }
+                else
+                {
+                    <h2 class="section-title">
+                        🍽️ Explore Global Recipes
+                    </h2>
+
+                    <p class="section-subtitle">
+                        Pick a dish and discover how it's made.
+                    </p>
+                }
+            </div>
+
+        </div>
+
+
+        @if (Model.Any())
+        {
+            <div class="row">
+
+                @foreach (var recipe in Model)
+                {
+                    <div class="col-md-6 col-lg-4 mb-4">
+
+                        <div class="recipe-card">
+
+                            @if (!string.IsNullOrWhiteSpace(recipe.ImageUrl))
+                            {
+                                <img src="@recipe.ImageUrl"
+                                     alt="@recipe.RecipeName"
+                                     class="recipe-image" />
+                            }
+                            else
+                            {
+                                <div class="recipe-image-placeholder">
+                                    🍽️
+                                </div>
+                            }
+
+
+                            <div class="recipe-content">
+
+                                <h3>
+                                    @recipe.RecipeName
+                                </h3>
+
+                                <p class="recipe-description">
+                                    @recipe.Description
+                                </p>
+
+
+                                <div class="recipe-info">
+
+                                    <span class="info-pill">
+                                        🌍 @recipe.Cuisine?.CountryName
+                                    </span>
+
+                                    <span class="info-pill">
+                                        ⏱️ @((recipe.PrepTime ?? 0) + (recipe.CookTime ?? 0)) mins
+                                    </span>
+
+                                    <span class="info-pill">
+                                        📊 @recipe.Difficulty
+                                    </span>
+
+                                </div>
+
+
+                                <div class="recipe-bottom">
+
+                                    <span class="category-badge">
+                                        @recipe.Category?.CategoryName
+                                    </span>
+
+                                    <a href="@Url.Action("Details", "Home", new { id = recipe.RecipeId })"
+                                       class="view-btn">
+                                        View Recipe →
+                                    </a>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+                }
+
+            </div>
+        }
+        else
+        {
+            <div class="no-results">
+
+                <div class="no-results-icon">
+                    🍽️
+                </div>
+
+                <h3>
+                    No recipes found
+                </h3>
+
+                <p>
+                    Try searching for another dish, cuisine or country.
+                </p>
+
+                <a href="@Url.Action("Index", "Home")"
+                   class="view-btn">
+                    View All Recipes
+                </a>
+
+            </div>
+        }
+
+    </section>
+
+</div>
